@@ -1,0 +1,27 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootroot
+      MYSQL_DATABASE: asco
+      # zap taj treba
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    volumes:
+      - ./data:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  server:
+    image: asco-server
+    environment:
+      DATABASE_URL: mysql://admin:admin@mysql:3306/asco
+      CORS_ALLOW_ORIGIN: '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'
+      MAILER_DSN: gmail+smtp://biznisimpra@gmail.com:mkmtzkbmluuourwb@default
+      MESSENGER_TRANSPORT_DSN: doctrine://default?auto_setup=0
+      APP_ENV: dev
+      APP_SECRET: 67987bb7fa5c131c96efe848ad6b8cac
+    ports:
+      - 8000:80
